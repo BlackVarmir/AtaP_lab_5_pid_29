@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
@@ -28,6 +28,8 @@ void Task1(int n) {
 		A[i] = new int[n];
 
 	FillMatrix(A, n, 10, 99);
+
+	cout << "Matrix:\n";
 	PrintMatrix(A, n);
 
 	int sum = 0, count = 0;
@@ -66,6 +68,8 @@ void Task2(int n) {
 		A[i] = new int[n];
 
 	FillMatrix(A, n, 10, 99);
+
+	cout << "Matrix:\n";
 	PrintMatrix(A, n);
 
 	int count = 0;
@@ -95,6 +99,8 @@ void Task3(int n) {
 		A[i] = new int[n];
 
 	FillMatrix(A, n, 100, 999);
+
+	cout << "Matrix:\n";
 	PrintMatrix(A, n);
 
 	for (int i = 0; i < n; i++) 
@@ -104,10 +110,8 @@ void Task3(int n) {
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
 			fout << A[i][j] << " ";
-			cout << A[i][j] << " ";
 		}
 		fout << endl;
-		cout << endl;
 	}
 	fout.close();
 
@@ -116,8 +120,32 @@ void Task3(int n) {
 }
 
 bool HasSameDigits(int num) {
-	return (num / 10) == (num % 10);
+	int firstDigit = num / 10;
+	int secondDigit = num % 10;
+	return firstDigit == secondDigit;
 }
+
+int SumValidColumns(int** A, int n) {
+	int totalSum = 0;
+
+	for (int j = 0; j < n; j++) {
+		bool validColumn = true;
+		int columnSum = 0;
+
+		for (int i = 0; i < n; i++) {
+			if (HasSameDigits(A[i][j])) {
+				validColumn = false;
+				break;
+			}
+			columnSum += A[i][j];
+		}
+
+		if (validColumn) totalSum += columnSum;
+	}
+
+	return totalSum;
+}
+
 
 void Task4(int n) {
 	int** A = new int* [n];
@@ -125,23 +153,13 @@ void Task4(int n) {
 		A[i] = new int[n];
 
 	FillMatrix(A, n, 10, 99);
+
+	cout << "Matrix:\n";
 	PrintMatrix(A, n);
 
-	int sum = 0;
-	for (int j = 0; j < n; j++) {
-		bool valid = true;
-		for (int i = 0; i < n; i++)
-			if (HasSameDigits(A[i][j])) {
-				valid = false;
-				break;
-			}
-		if (valid) {
-			for (int i = 0; i < n; i++)
-				sum += A[i][j];
-		}
-	}
+	int sum = SumValidColumns(A, n);
 
-	cout << "Sum of valid columns: " << sum << endl;
+	cout << "Sum of items in columns without identical digits: " << sum << endl;
 
 	for (int i = 0; i < n; i++) delete[] A[i];
 	delete[] A;
@@ -155,7 +173,7 @@ int main()
 	cin >> n;
 
 	do {
-		cout << "\n\tMenu\n";
+		cout << "\nMenu\n";
 		cout << "1. Task 1\n";
 		cout << "2. Task 2\n";
 		cout << "3. Task 3\n";
